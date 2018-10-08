@@ -7,11 +7,13 @@ package cz.muni.fi.pa165.currency;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import javax.inject.Named;
 
 /**
  *
  * @author xtrnkal
  */
+//@Named
 public class ExchangeRateTableImpl implements ExchangeRateTable {
 
     @Override
