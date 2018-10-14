@@ -6,19 +6,17 @@ import java.util.Currency;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-
 /**
  * This is base implementation of {@link CurrencyConvertor}.
  *
  * @author petr.adamek@embedit.cz
  */
-//@Named
+@Named
 public class CurrencyConvertorImpl implements CurrencyConvertor {
 
     private final ExchangeRateTable exchangeRateTable;
-    //private final Logger logger = LoggerFactory.getLogger(CurrencyConvertorImpl.class);
 
-    //@Inject
+    @Inject
     public CurrencyConvertorImpl(ExchangeRateTable exchangeRateTable) {
         this.exchangeRateTable = exchangeRateTable;
     }
