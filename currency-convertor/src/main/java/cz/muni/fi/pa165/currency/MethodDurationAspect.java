@@ -19,12 +19,12 @@ public class MethodDurationAspect {
         System.out.println("Calling method: "
                 + joinPoint.getSignature().toString());
 
-        long firstStamp = System.currentTimeMillis();
+        long firstStamp = System.nanoTime();
         Object result = joinPoint.proceed();
-        long secondStamp = System.currentTimeMillis();
+        long secondStamp = System.nanoTime();
 
         System.out.println("Duration: "
-                + (secondStamp - firstStamp) + " ms");
+                + (secondStamp - firstStamp) / 1_000_000D + " ms");
         return result;
     }
 
