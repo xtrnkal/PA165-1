@@ -28,8 +28,7 @@ public class Task02 extends AbstractTestNGSpringContextTests {
     private Product flashlight = new Product();
     private Product kitchenRobot = new Product();
     private Product plate = new Product();
-    
-    
+
     @BeforeClass
     public void OnlyOnce() {
         EntityManager em = emf.createEntityManager();
@@ -39,25 +38,24 @@ public class Task02 extends AbstractTestNGSpringContextTests {
         kitchen.setName("Kitchen");
         em.persist(electro);
         em.persist(kitchen);
-        
+
         flashlight.setName("Flashlight");
-        flashlight.setName("Kitchen robot");
-        flashlight.setName("Plate");
+        kitchenRobot.setName("Kitchen robot");
+        plate.setName("Plate");
 
         flashlight.addCategory(electro);
         kitchenRobot.addCategory(kitchen);
         kitchenRobot.addCategory(electro);
         plate.addCategory(kitchen);
-        
-        
+
         em.persist(flashlight);
         em.persist(kitchenRobot);
         em.persist(plate);
-        
+
         /*
         em.persist(electro);
         em.persist(kitchen);
-        */        
+         */
         em.getTransaction().commit();
         em.close();
     }
@@ -86,8 +84,31 @@ public class Task02 extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    private void testCategory() {
-        
+    private void testCategoryKitchen() {
+        EntityManager em = emf.createEntityManager();
+
+        Category found = em.find(Category.class, kitchen.getId());
+        Set<Product> foundProducts = found.getProducts();
+
+        Assert.assertEquals(found.getProducts().size(), 2);
+        assertContainsProductWithName(foundProducts, "Kitchen robot");
+        assertContainsProductWithName(foundProducts, "Plate");
+
+        em.close();
+    }
+
+    @Test
+    private void testCateoryElectro() {
+        EntityManager em = emf.createEntityManager();
+
+        Category found = em.find(Category.class, electro.getId());
+        Set<Product> foundProducts = found.getProducts();
+
+        Assert.assertEquals(found.getProducts().size(), 2);
+        assertContainsProductWithName(foundProducts, "Kitchen robot");
+        assertContainsProductWithName(foundProducts, "Flashlight");
+
+        em.close();
     }
 
     @Test
@@ -101,5 +122,41 @@ public class Task02 extends AbstractTestNGSpringContextTests {
         em.close();
 
     }
-}
 
+    @Test
+    private void testKitchenRobot() {
+        EntityManager em = emf.createEntityManager();
+
+        Product found = em.find(Product.class, kitchenRobot.getId());
+        Set<Category> foundCategories = found.getCategories();
+        Assert.assertEquals(foundCategories.size(), 2);
+        assertContainsCategoryWithName(foundCategories, "Kitchen");
+        assertContainsCategoryWithName(foundCategories, "Electro");
+
+        em.close();
+    }
+
+    @Test
+    private void testPlate() {
+        EntityManager em = emf.createEntityManager();
+
+        Product found = em.find(Product.class, plate.getId());
+        Assert.assertEquals(found.getCategories().size(), 1);
+
+        Assert.assertEquals(found.getCategories().iterator().next().getName(), "Kitchen");
+
+        em.close();
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void testDoesntSaveNullName() {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+
+        Product product = new Product();
+        em.persist(product);
+
+        em.getTransaction().commit();
+        em.close();
+    }
+}

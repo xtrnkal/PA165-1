@@ -40,7 +40,8 @@ public class Product {
 
 	private String imageMimeType;
 	
-
+        @NotNull
+	@Column(nullable=false,unique=true)
 	private String name;
 	
 	/*
